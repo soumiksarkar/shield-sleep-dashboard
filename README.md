@@ -1,70 +1,118 @@
-# Getting Started with Create React App
+# SHIELD Sleep Dashboard - Frontend App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository contains the frontend component for the SHIELD Sleep Scoring Engine, designed as a React dashboard widget. It allows users to input sleep data, send it to the backend API, and display the calculated SHIELD Sleep Score, Bio-Age Change, and system alerts with suggestions.
 
-## Available Scripts
+## Part 2: Frontend - React Dashboard Widget
 
-In the project directory, you can run:
+This is a React application that provides a dashboard widget for inputting sleep data and displaying the calculated SHIELD Sleep Score, Bio-Age Change, and system alerts with suggestions.
 
-### `npm start`
+### Architecture
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+* **Technology Stack:** React.js, JavaScript, Tailwind CSS (via CDN).
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* **Component-Based:** The application is modularized into three main components:
 
-### `npm test`
+    * **`App.jsx`:** The root component, managing global state and orchestrating the display of the input form and results.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    * **`SleepInputForm.jsx`:** Handles user input fields and the submission button.
 
-### `npm run build`
+    * **`SleepResultsDisplay.jsx`:** Renders the calculated sleep score, bio-age delta, alerts, and improvement suggestions.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* **State Management:** React's `useState` hook is used for local component state management.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* **API Interaction:** Uses the native `fetch` API to communicate with the Java Spring Boot backend.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* **Styling:** Utilizes Tailwind CSS classes for a modern, responsive, and utility-first styling approach. The Tailwind CDN and custom font are loaded in `public/index.html` for global availability.
 
-### `npm run eject`
+### Assumptions
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* **Backend Availability:** Assumes the Java Spring Boot backend is running and accessible at `http://localhost:8080`. The frontend will attempt to connect to this URL.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* **CORS:** Relies on the backend to have appropriate Cross-Origin Resource Sharing (CORS) headers configured to allow requests from the React application's origin (typically `http://localhost:3000` during local development).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* **Client-Side Validation:** Basic HTML5 form validation is used to provide immediate feedback to the user, complementing the more robust validation performed on the backend.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+* **No Routing/Complex Navigation:** Designed as a single-page widget; no advanced routing or multi-page navigation is implemented.
 
-## Learn More
+### How to Run and Test the System (Frontend)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Prerequisites:**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* Node.js (LTS version recommended)
 
-### Code Splitting
+* npm (Node Package Manager, comes with Node.js) or Yarn
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+**Steps:**
 
-### Analyzing the Bundle Size
+1.  **Ensure Backend is Running:**
+    Make sure your Java Spring Boot backend application is running first. The frontend will attempt to connect to `http://localhost:8080/api/sleep/score`. Refer to the backend repository's `README.md` for instructions on how to run it.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2.  **Clone the repository:**
 
-### Making a Progressive Web App
+    ```bash
+    git clone git@github.com:soumiksarkar/shield-sleep-dashboard.git
+    cd shield-sleep-dashboard
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+3.  **Install dependencies:**
 
-### Advanced Configuration
+    ```bash
+    npm install
+    # or if using yarn
+    yarn install
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+4.  **Resolve OpenSSL Legacy Provider Issue (if using Node.js v17+):**
+    If you encounter `ERR_OSSL_EVP_UNSUPPORTED` errors when running `npm start`, you need to set an environment variable.
 
-### Deployment
+    * **For macOS/Linux:**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+        ```bash
+        NODE_OPTIONS=--openssl-legacy-provider npm start
+        ```
 
-### `npm run build` fails to minify
+    * **For Windows (Command Prompt):**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+        ```cmd
+        set NODE_OPTIONS=--openssl-legacy-provider && npm start
+        ```
+
+    * **For Windows (PowerShell):**
+
+        ```powershell
+        $env:NODE_OPTIONS="--openssl-legacy-provider"; npm start
+        ```
+
+    Otherwise, you can just run:
+
+    ```bash
+    npm start
+    # or if using Vite (common for modern React setups)
+    npm run dev
+    ```
+
+    The frontend application will typically open in your browser at `http://localhost:3000`.
+
+### Deploy a Live Demo (Frontend Specifics)
+
+Deploying the frontend involves hosting the static files generated by the build process.
+
+* **Build Process:** Before deployment, you'll need to build your React application:
+
+    ```bash
+    npm run build
+    # This creates a 'build' folder (or 'dist' for Vite) with optimized assets.
+    ```
+
+* **Static Site Hosting:** The `build` (or `dist`) folder can be hosted on various static site hosting services:
+
+    * **Netlify:** Excellent for continuous deployment from Git repositories.
+
+    * **Vercel:** Similar to Netlify, popular for Next.js and React applications.
+
+    * **GitHub Pages:** A simple option for personal projects, directly from a GitHub repository.
+
+    * **AWS S3 + CloudFront:** A robust and scalable solution for static content delivery.
+
+    * **Firebase Hosting:** Easy integration if you are already using Firebase for other services.
+
