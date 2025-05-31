@@ -16,6 +16,9 @@ export const SleepInputForm = ({
             <div>
                 <label htmlFor="totalSleepHours" className="block text-gray-700 text-sm font-semibold mb-2">
                     Total Sleep Hours (e.g., 7.5)
+                    <span className="ml-2 text-gray-500 text-xs italic" title="The total amount of time you spent asleep.">
+                        (Hours)
+                    </span>
                 </label>
                 <input
                     type="number"
@@ -24,7 +27,9 @@ export const SleepInputForm = ({
                     onChange={(e) => setTotalSleepHours(e.target.value)}
                     step="0.1"
                     min="0"
+                    max="24"
                     required
+                    title="Enter the total number of hours you slept, e.g., 7.5 for 7 hours and 30 minutes."
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200"
                 />
             </div>
@@ -33,6 +38,9 @@ export const SleepInputForm = ({
             <div>
                 <label htmlFor="sleepEfficiency" className="block text-gray-700 text-sm font-semibold mb-2">
                     Sleep Efficiency (%) (e.g., 90)
+                    <span className="ml-2 text-gray-500 text-xs italic" title="The percentage of time you spent actually asleep while in bed.">
+                        (%)
+                    </span>
                 </label>
                 <input
                     type="number"
@@ -43,6 +51,7 @@ export const SleepInputForm = ({
                     min="0"
                     max="100"
                     required
+                    title="Enter your sleep efficiency as a percentage (0-100%). Higher is generally better."
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200"
                 />
             </div>
@@ -51,6 +60,9 @@ export const SleepInputForm = ({
             <div>
                 <label htmlFor="remPercentage" className="block text-gray-700 text-sm font-semibold mb-2">
                     REM Percentage (%) (e.g., 20)
+                    <span className="ml-2 text-gray-500 text-xs italic" title="The percentage of your total sleep time spent in Rapid Eye Movement (REM) sleep.">
+                        (%)
+                    </span>
                 </label>
                 <input
                     type="number"
@@ -61,6 +73,7 @@ export const SleepInputForm = ({
                     min="0"
                     max="100"
                     required
+                    title="Enter the percentage of your sleep spent in REM stage (0-100%)."
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200"
                 />
             </div>
@@ -69,6 +82,9 @@ export const SleepInputForm = ({
             <div>
                 <label htmlFor="age" className="block text-gray-700 text-sm font-semibold mb-2">
                     Age
+                    <span className="ml-2 text-gray-500 text-xs italic" title="Your current age in years. Used for age-specific sleep recommendations.">
+                        (Years)
+                    </span>
                 </label>
                 <input
                     type="number"
@@ -76,7 +92,9 @@ export const SleepInputForm = ({
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
                     min="1"
+                    max="120"
                     required
+                    title="Enter your age. This helps personalize sleep score interpretation."
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200"
                 />
             </div>
@@ -85,12 +103,16 @@ export const SleepInputForm = ({
             <div className="md:col-span-2">
                 <label htmlFor="sex" className="block text-gray-700 text-sm font-semibold mb-2">
                     Sex
+                    <span className="ml-2 text-gray-500 text-xs italic" title="Your biological sex. Sleep patterns can vary slightly by sex.">
+                        (Biological)
+                    </span>
                 </label>
                 <select
                     id="sex"
                     value={sex}
                     onChange={(e) => setSex(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200"
+                    title="Select your biological sex."
                 >
                     <option value="male">Male</option>
                     <option value="female">Female</option>
