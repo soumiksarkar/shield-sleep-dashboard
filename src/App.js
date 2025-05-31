@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { SleepInputForm } from './SleepInputForm'; // Changed to named import
-import { SleepResultsDisplay } from './SleepResultsDisplay'; // Changed to named import
+import { SleepInputForm } from './SleepInputForm';
+import { SleepResultsDisplay } from './SleepResultsDisplay';
 
 const App = () => {
     // State variables to store user inputs for the form
@@ -18,6 +18,11 @@ const App = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    // State for Lab Report Simulation
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploadMessage, setUploadMessage] = useState('');
+    const [uploadError, setUploadError] = useState(null);
+
     // Base URL for the backend API. This must match your Java Spring Boot app's address.
     const API_BASE_URL = 'http://localhost:8080';
 
@@ -29,6 +34,7 @@ const App = () => {
         e.preventDefault();
         setLoading(true);
         setError(null);
+        setShieldScore(null); // Clear previous results
 
         const payload = {
             totalSleepHours: parseFloat(totalSleepHours),
@@ -79,12 +85,66 @@ const App = () => {
         }
     };
 
+    /**
+     * Handles mock lab report file selection and submission.
+     */
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+        setUploadMessage('');
+        setUploadError(null);
+    };
+
+    const handleFileUpload = async () => {
+        if (!selectedFile) {
+            setUploadError("Please select a file to upload.");
+            return;
+        }
+
+        setUploadMessage("Simulating upload...");
+        setUploadError(null);
+
+        // Simulate API call for lab report upload (no actual file transfer here)
+        try {
+            // If you had a real mock endpoint, you would send FormData:
+            // const formData = new FormData();
+            // formData.append('file', selectedFile);
+            // const response = await fetch(`${API_BASE_URL}/api/lab/upload`, {
+            //     method: 'POST',
+            //     body: formData,
+            // });
+            // if (!response.ok) {
+            //     throw new Error(`Upload failed with status: ${response.status}`);
+            // }
+            // const data = await response.json();
+            // setUploadMessage(data.message || 'File upload simulated successfully!');
+
+            // For now, just a timeout to simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            setUploadMessage(`File '${selectedFile.name}' simulated upload successfully! (No actual data processed)`);
+            setSelectedFile(null); // Clear selected file
+
+        } catch (err) {
+            console.error('Simulated upload error:', err);
+            setUploadError(`Simulated upload failed: ${err.message}`);
+            setUploadMessage('');
+        }
+    };
+
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center p-4 font-sans">
             <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-2xl transform transition-all duration-500 hover:scale-105">
                 <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
                     SHIELD Sleep Dashboard
                 </h1>
+
+                {/* AI Integration Clarity */}
+                <div className="bg-blue-50 border-l-4 border-blue-400 text-blue-700 p-3 rounded-md mb-6 text-sm">
+                    <p>
+                        **Note:** The sleep scoring logic for SHIELD Score and Bio-Age Delta in this demo is based on hardcoded rules. In a full production system, this could be powered by advanced machine learning models for dynamic and personalized insights.
+                    </p>
+                </div>
+
 
                 {/* Render the SleepInputForm component */}
                 <SleepInputForm
@@ -124,18 +184,46 @@ const App = () => {
                         suggestions={suggestions}
                     />
                 )}
+
+                {/* Lab Report Upload Simulation */}
+                <div className="mt-10 border-t-2 border-gray-200 pt-8">
+                    <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Lab Report Upload Simulation</h2>
+                    <p className="text-gray-600 text-center mb-4 text-sm">
+                        (This is a simulated interface to demonstrate readiness for clinical workflows. No actual file processing occurs.)
+                    </p>
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                        <input
+                            type="file"
+                            id="labReportUpload"
+                            accept=".pdf,.jpg,.png"
+                            onChange={handleFileChange}
+                            className="block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-full file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-violet-50 file:text-violet-700
+                                hover:file:bg-violet-100"
+                        />
+                        {selectedFile && (
+                            <p className="text-sm text-gray-600">Selected: {selectedFile.name}</p>
+                        )}
+                        <button
+                            onClick={handleFileUpload}
+                            disabled={!selectedFile || uploadMessage.startsWith("Simulating")}
+                            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {uploadMessage.startsWith("Simulating") ? "Uploading..." : "Simulate Lab Report Upload"}
+                        </button>
+                        {uploadMessage && (
+                            <p className="text-green-600 text-sm mt-2">{uploadMessage}</p>
+                        )}
+                        {uploadError && (
+                            <p className="text-red-600 text-sm mt-2">{uploadError}</p>
+                        )}
+                    </div>
+                </div>
+
             </div>
-            {/* Tailwind CSS CDN for styling */}
-            <script src="https://cdn.tailwindcss.com"></script>
-            {/* Custom font (Inter) */}
-            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
-            <style>
-                {`
-                body {
-                    font-family: 'Inter', sans-serif;
-                }
-                `}
-            </style>
         </div>
     );
 };

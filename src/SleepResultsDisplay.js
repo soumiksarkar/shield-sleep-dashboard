@@ -2,6 +2,21 @@ import React from 'react';
 
 // Changed to named export
 export const SleepResultsDisplay = ({ shieldScore, bioAgeDelta, alerts, suggestions }) => {
+    // Determine color class for SHIELD Score
+    const getScoreColorClass = (score) => {
+        if (score >= 85) return 'bg-green-500'; // Change to bg- for background color
+        if (score >= 70) return 'bg-yellow-500';
+        return 'bg-red-500';
+    };
+
+    // Determine color class for Bio-Age Delta
+    const getBioAgeDeltaColorClass = (delta) => {
+        const deltaNum = parseFloat(delta);
+        if (deltaNum < 0) return 'text-green-600'; // Younger bio-age
+        if (deltaNum === 0) return 'text-gray-600'; // Same bio-age
+        return 'text-red-600'; // Older bio-age
+    };
+
     return (
         <div className="mt-8 border-t-2 border-gray-200 pt-8">
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Your Sleep Report</h2>
@@ -9,14 +24,39 @@ export const SleepResultsDisplay = ({ shieldScore, bioAgeDelta, alerts, suggesti
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                 {/* SHIELD Sleep Score Card */}
                 <div className="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-6 shadow-md">
-                    <p className="text-lg font-semibold text-blue-700">SHIELD Sleep Score</p>
-                    <p className="text-5xl font-extrabold text-blue-900 mt-2">{shieldScore}</p>
+                    <p className="text-lg font-semibold text-blue-700 mb-2">SHIELD Sleep Score</p>
+                    <div
+                        className={`text-5xl font-extrabold ${getScoreColorClass(shieldScore).replace('bg-', 'text-')}`} // Keep text color for score text
+                        title={`A score of ${shieldScore} out of 100.`}
+                    >
+                        {shieldScore}
+                    </div>
+                    {/* Sleep Score Meter */}
+                    <div className="w-full bg-gray-200 rounded-full h-2.5 mt-4">
+                        <div
+                            className={`h-2.5 rounded-full ${getScoreColorClass(shieldScore)}`} // Apply background color class here
+                            style={{ width: `${shieldScore}%` }} // Only width needed in style
+                            title={`Sleep Score: ${shieldScore}%`}
+                        ></div>
+                    </div>
                 </div>
 
                 {/* Bio-Age Change Card */}
                 <div className="bg-green-50 border-l-4 border-green-500 rounded-lg p-6 shadow-md">
-                    <p className="text-lg font-semibold text-green-700">Bio-Age Change</p>
-                    <p className="text-5xl font-extrabold text-green-900 mt-2">{bioAgeDelta}</p>
+                    <p className="text-lg font-semibold text-green-700 mb-2">Bio-Age Change</p>
+                    <div
+                        className={`text-5xl font-extrabold ${getBioAgeDeltaColorClass(bioAgeDelta)}`}
+                        title={`Your sleep patterns indicate a biological age delta of ${bioAgeDelta} years.`}
+                    >
+                        {bioAgeDelta}
+                    </div>
+                    <p className="text-sm text-gray-600 mt-2">
+                        {parseFloat(bioAgeDelta) < 0
+                            ? 'Your sleep patterns suggest a younger biological age!'
+                            : parseFloat(bioAgeDelta) > 0
+                            ? 'Your sleep patterns suggest an older biological age.'
+                            : 'Your sleep patterns align with your chronological age.'}
+                    </p>
                 </div>
             </div>
 
@@ -45,7 +85,7 @@ export const SleepResultsDisplay = ({ shieldScore, bioAgeDelta, alerts, suggesti
             )}
 
             {/* No Alerts Message */}
-            {alerts.length === 0 && (
+            {alerts.length === 0 && shieldScore !== null && ( // Only show if score is calculated and no alerts
                 <div className="mt-8 bg-green-50 border-l-4 border-green-500 rounded-lg p-4 shadow-sm text-center">
                     <p className="text-lg font-semibold text-green-800">
                         <svg className="w-6 h-6 inline-block mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
